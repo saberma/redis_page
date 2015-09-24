@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{use redis to cache your rails page.}
   spec.description   = %q{use redis to cache your rails page.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/saberma/redis_page"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
