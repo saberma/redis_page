@@ -8,9 +8,9 @@ module RedisPage
 
       auth = { username: "cache", password: "ewHN84JZLyRurX" }
 
-      Rails.logger.info "[page cache sweeper]fetching: #{url}"
+      Rails.logger.info "[page cache]sweeper fetching: #{url}"
       response = HTTParty.get(uri, basic_auth: auth)
-      Rails.logger.debug "[page cache sweeper]response: #{response.body}"
+      Rails.logger.debug "[page cache]sweeper response: #{response.body}"
     end
   end
 end
