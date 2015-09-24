@@ -39,7 +39,7 @@ end
 
 ### 2. View
 
-记录哪些实体更新时要刷新的 url，例如：Phantom 3 在首页中显示了，则记录下 Phantom 3 实体与首页的关联关系
+记录哪些实体更新时要刷新的 url，例如：iPhone 在首页中显示了，则记录下 iPhone 实体与首页的关联关系
 
 ```
 - Product.all.each do |product|
@@ -58,3 +58,9 @@ c 方法会记录当前页面 url
 ### 3. Model
 
 更新实体后刷新所有关联的页面缓存
+
+```
+class Product < ActiveRecord::Base
+  include RedisPage::Sweeper
+end
+```
