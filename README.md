@@ -64,3 +64,10 @@ class Product < ActiveRecord::Base
   include RedisPage::Sweeper
 end
 ```
+
+## Contribution
+
+```
+gem build redis_page.gemspec
+gem push redis_page-0.1.0.gem
+```
