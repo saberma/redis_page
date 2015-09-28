@@ -8,7 +8,7 @@ module RedisPage
       after_save :invalidate_instance_cache
 
       def invalidate_instance_cache
-        $redis.smembers("i:#{self.class.table_name}:#{self.id}").each do |info|
+        RedisPage.redis.smembers("i:#{self.class.table_name}:#{self.id}").each do |info|
           info = JSON.parse(info)
           Rails.logger.info "[page cache]add sweeper job: #{info['url']}-#{info['country']}"
           SweeperWorker.perform_async(info['url'], info['country'])

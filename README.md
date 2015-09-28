@@ -27,7 +27,7 @@ And then execute:
 
 ```
 class ProductController < ActionController::Base
-  caches_redis_page :show, :new
+  caches_redis_page :show
 
   def show
     @product = Product.find(params[:id])

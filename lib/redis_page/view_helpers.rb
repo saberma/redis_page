@@ -21,7 +21,7 @@ module RedisPage
         id   = object.id
       end
       Rails.logger.info "[page cache]record: #{name}##{id}"
-      $redis.sadd("i:#{name}:#{id}", { url: request.url, country: @cache_country }.to_json)
+      RedisPage.redis.sadd("i:#{name}:#{id}", { url: request.url, country: @cache_country }.to_json)
     end
 
   end

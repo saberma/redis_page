@@ -32,7 +32,7 @@ module ActionController
 
       def cache_page(content, path)
         Rails.logger.info "[page cache]caching: #{path}"
-        $redis.set(path, content)
+        RedisPage.redis.set(path, content)
       end
 
       def record_cached_page

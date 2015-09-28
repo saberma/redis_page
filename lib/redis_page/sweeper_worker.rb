@@ -4,9 +4,9 @@ module RedisPage
 
     def perform(url, country=nil)
       uri = URI(url)
-      uri.port = 8081
+      uri.port = RedisPage.sweeper[:port]
 
-      auth = { username: "cache", password: "ewHN84JZLyRurX" }
+      auth = { username: RedisPage.sweeper[:username], password: RedisPage.sweeper[:password] }
       options = { basic_auth: auth }
       options[:cookies] = { country: country } if country
 
