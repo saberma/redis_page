@@ -2,7 +2,7 @@ require 'active_support/core_ext/class/attribute_accessors'
 
 module ActionController
   module Caching
-    module Pages
+    module RedisPages
       INSTANCE_PATH_REGEX = /^\/(\w+)\/(\d+)/
       extend ActiveSupport::Concern
 
@@ -10,6 +10,7 @@ module ActionController
       end
 
       module ClassMethods
+
         def caches_redis_page(*actions)
           options = actions.extract_options!
 
@@ -17,7 +18,7 @@ module ActionController
             @page_need_to_cache = true
             if options[:append_country]
               # X-IP-Country 是通过 nginx GeoIP2 module 注入的 header
-              @cache_country = (cookies[:country] || request.headers['X-IP-Country']).upcase
+              @cache_country = (cookies[:country] || request.headers['X-IP-Country']).try(:upcase)
             end
           end
 

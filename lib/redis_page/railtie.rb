@@ -4,7 +4,7 @@ module RedisPage
   class Railtie < Rails::Railtie
     initializer "redis_page" do
       ActiveSupport.on_load(:action_controller) do
-        require 'action_controller/page_caching'
+        require 'action_controller/redis_page_caching'
       end
     end
 

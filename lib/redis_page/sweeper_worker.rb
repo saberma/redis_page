@@ -1,3 +1,5 @@
+require "sidekiq"
+
 module RedisPage
   class SweeperWorker
     include Sidekiq::Worker

@@ -21,7 +21,7 @@ And then execute:
 
 ## Usage
 
-### 0. Config
+### 1. Config
 
 增加文件：`config/initializers/redis_page.rb`
 
@@ -32,9 +32,17 @@ RedisPage.configure do |config|
   config.sweeper = { port: 8081, username: 'cache', password: 'ewHN84JZLyRurX' }
   config.redis = Redis.new(host: "redis", port: 6379, db: 10)
 end
+
+Sidekiq.configure_server do |config|
+  config.redis = { url: "redis://redis:6379/15" }
+end
+
+Sidekiq.configure_client do |config|
+  config.redis = { url: "redis://redis:6379/15" }
+end
 ```
 
-### 1. Controller
+### 2. Controller
 
 生成页面缓存
 
@@ -48,7 +56,7 @@ class ProductController < ActionController::Base
 end
 ```
 
-### 2. View
+### 3. View
 
 记录哪些实体更新时要刷新的 url，例如：iPhone 在首页中显示了，则记录下 iPhone 实体与首页的关联关系
 
@@ -66,7 +74,7 @@ end
 
 c 方法会记录当前页面 url
 
-### 3. Model
+### 4. Model
 
 更新实体后刷新所有关联的页面缓存
 
@@ -80,5 +88,5 @@ end
 
 ```
 gem build redis_page.gemspec
-gem push redis_page-0.1.0.gem
+gem push redis_page-0.1.1.gem
 ```
