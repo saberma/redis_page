@@ -31,8 +31,6 @@ class ProductController < ActionController::Base
 
   def show
     @product = Product.find(params[:id])
-    @model_name = Product.table_name
-    @model_id   = @product.id
   end
 end
 ```

@@ -3,7 +3,7 @@ module RedisPage
 
     # 记录当前实体相关的页面，方便实体更新时，刷新页面缓存
     def c(object)
-      mark_cache_instance(object)
+      mark_cache_instance(object) if @page_need_to_cache
       object
     end
 
@@ -20,7 +20,8 @@ module RedisPage
         name = object.class.table_name.downcase
         id   = object.id
       end
-      $redis.sadd("i:#{name}:#{id}", request.url)
+      Rails.logger.info "[page cache]record: #{name}##{id}"
+      $redis.sadd("i:#{name}:#{id}", { url: request.url, country: @cache_country }.to_json)
     end
 
   end
