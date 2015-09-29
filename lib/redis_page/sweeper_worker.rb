@@ -7,6 +7,7 @@ module RedisPage
     def perform(url, country=nil)
       uri = URI(url)
       uri.port = RedisPage.sweeper[:port]
+      uri.scheme = 'http'
 
       auth = { username: RedisPage.sweeper[:username], password: RedisPage.sweeper[:password] }
       options = { basic_auth: auth }
