@@ -68,15 +68,15 @@ end
 修改为：
 
 ```
-- Product.all.each do |product|
+- c(Product).all.each do |product|
   = c(@product).title
 ```
 
-c 方法会记录当前页面 url
+c 方法会记录当前页面 url, c(Product) 表示添加、删除商品也会刷新当前页面
 
 ### 4. Model
 
-更新实体后刷新所有关联的页面缓存
+更新、删除、添加实体后刷新所有关联的页面缓存
 
 ```
 class Product < ActiveRecord::Base
