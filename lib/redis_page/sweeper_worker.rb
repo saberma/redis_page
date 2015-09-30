@@ -13,7 +13,7 @@ module RedisPage
       options = { basic_auth: auth }
       options[:cookies] = { country: country } if country
 
-      Rails.logger.info "[page cache]sweeper fetching: #{url}, country: #{country}"
+      Rails.logger.info "[page cache]sweeper fetching: #{uri}, country: #{country}"
       response = HTTParty.get(uri, options)
       Rails.logger.debug "[page cache]sweeper response: #{response.body}"
     end
