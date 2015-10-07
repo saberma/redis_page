@@ -8,6 +8,7 @@ module RedisPage
       uri = URI(url)
       uri.port = RedisPage.sweeper[:port]
       uri.scheme = 'http'
+      uri.query  = uri.fragment = nil    # 去掉 query string 等
 
       auth = { username: RedisPage.sweeper[:username], password: RedisPage.sweeper[:password] }
       options = { basic_auth: auth }
