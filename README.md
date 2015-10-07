@@ -49,7 +49,9 @@ end
 
 ```
 class ProductController < ActionController::Base
-  caches_redis_page :show
+  caches_redis_page :show                                            # 或者使用下面两行的格式
+  #caches_redis_page :show, append_country: true                     # cache key 会在 path 后面加上国家代码，例如：/products-US
+  #caches_redis_page :show, unless: Proc.new { params[:preview] }    # 带上 preview 参数，则不进行缓存，方便管理员对未保存的内容进行预览
 
   def show
     @product = Product.find(params[:id])
