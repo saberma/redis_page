@@ -34,7 +34,7 @@ module ActionController
 
       def cache_redis_page(content, path)
         Rails.logger.info "[page cache]caching: #{path}"
-        RedisPage.redis.set(path, content)
+        RedisPage.redis.setex(path, RedisPage.config.ttl || 604800, content)    # 1 周后失效
       end
 
       def record_cached_page

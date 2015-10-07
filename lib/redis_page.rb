@@ -2,7 +2,7 @@ require 'redis_page/railtie'
 
 module RedisPage
   class Config
-    attr_accessor :sweeper, :redis
+    attr_accessor :sweeper, :redis, :ttl
   end
 
   def self.config
