@@ -26,13 +26,13 @@ module ActionController
           after_filter({only: actions}.merge(options)) do |c|
             path = request.path
             path = "#{path}-#{@cache_country}" if @cache_country
-            c.cache_page(response.body, path)
+            c.cache_redis_page(response.body, path)
             c.record_cached_page
           end
         end
       end
 
-      def cache_page(content, path)
+      def cache_redis_page(content, path)
         Rails.logger.info "[page cache]caching: #{path}"
         RedisPage.redis.set(path, content)
       end
