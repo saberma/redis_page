@@ -12,6 +12,7 @@ module ActionController
       module ClassMethods
 
         def caches_redis_page(*actions)
+          return unless RedisPage.redis
           options = actions.extract_options!
 
           before_filter({only: actions}.merge(options)) do |c|
