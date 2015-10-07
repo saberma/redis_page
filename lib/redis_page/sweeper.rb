@@ -6,6 +6,7 @@ module RedisPage
 
     included do
       after_save :invalidate_instance_cache
+      after_touch :invalidate_instance_cache
       after_destroy :invalidate_clazz_cache
 
       def invalidate_instance_cache

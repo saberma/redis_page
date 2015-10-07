@@ -84,6 +84,20 @@ class Product < ActiveRecord::Base
 end
 ```
 
+### 5. Collection
+
+删除子记录时要触发父记录更新
+
+```
+collection.products.delete product
+```
+
+在父记录的 model 关系中增加 after_remove，触发父记录更新
+
+```
+  has_many :products, through: :collections_products, after_remove: proc { |a| a.touch }
+```
+
 ## Contribution
 
 ```
