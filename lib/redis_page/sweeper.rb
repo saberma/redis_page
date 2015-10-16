@@ -45,10 +45,14 @@ module RedisPage
 
       def fetch_infos(urls)
         urls.values.each do |info|
-          Rails.logger.info "[page cache]add sweeper job: #{info['url']}-#{info['country']}"
-          SweeperWorker.perform_async(info['url'], info['country'])
+          RedisPage::Sweeper.sweep info
         end
       end
+    end
+
+    def self.sweep(info)
+      Rails.logger.info "[page cache]add sweeper job: #{info['url']}-#{info['country']}"
+      SweeperWorker.perform_async(info['url'], info['country'])
     end
   end
 end
