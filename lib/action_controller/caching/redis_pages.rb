@@ -27,15 +27,21 @@ module ActionController
             #path = request.path    # fixed: /products/ 地址带了/符号，缓存不生效
             path = URI(request.original_url).path
             path = "#{path}-#{@cache_country}" if @cache_country
-            c.cache_redis_page(response.body, path)
+            c.cache_redis_page(response.body, path, options)
             c.record_cached_page
           end
         end
       end
 
-      def cache_redis_page(content, path)
-        Rails.logger.info "[page cache]caching: #{path}"
-        RedisPage.redis.setex(path, RedisPage.config.ttl || 604800, content)    # 1 周后失效
+      def cache_redis_page(content, path, options = {})
+        key  = path
+        text = "[page cache]caching: #{path}"
+        if namespace = options[:namespace]
+          key  = "#{namespace}:#{key}"
+          text = "#{text} in #{namespace}"
+        end
+        Rails.logger.info text
+        RedisPage.redis.setex(key, RedisPage.config.ttl || 604800, content)    # 1 周后失效
       end
 
       def record_cached_page

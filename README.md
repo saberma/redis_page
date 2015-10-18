@@ -52,6 +52,7 @@ class ProductController < ActionController::Base
   caches_redis_page :show                                            # 或者使用下面两行的格式
   #caches_redis_page :show, append_country: true                     # cache key 会在 path 后面加上国家代码，例如：/products-US
   #caches_redis_page :show, unless: Proc.new { params[:preview] }    # 带上 preview 参数，则不进行缓存，方便管理员对未保存的内容进行预览
+  #caches_redis_page :show, namespace: 'www'                         # 多个子域名的 path 可能相同，可以使用 namespace 来区分
 
   def show
     @product = Product.find(params[:id])
