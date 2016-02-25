@@ -2,7 +2,7 @@ module RedisPage
   module ViewHelpers
     # 记录当前实体相关的页面，方便实体更新时，刷新页面缓存
     def c(object_or_clazz)
-      if @page_need_to_cache
+      if @page_need_to_cache && object_or_clazz
         object_or_clazz.is_a?(Class) ? mark_cache_clazz(object_or_clazz) : mark_cache_instance(object_or_clazz)
       end
       object_or_clazz
