@@ -102,6 +102,10 @@ collection.products.delete product
   has_many :products, through: :collections_products, after_remove: proc { |a| a.touch }
 ```
 
+## 异步任务
+
+使用 Sidekiq 执行异步任务，默认的队列名为 redis_page
+
 ## Contribution
 
 ```

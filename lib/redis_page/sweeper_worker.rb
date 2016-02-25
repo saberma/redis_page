@@ -3,6 +3,7 @@ require "sidekiq"
 module RedisPage
   class SweeperWorker
     include Sidekiq::Worker
+    sidekiq_options queue: :redis_page, retry: false
 
     def perform(url, country=nil)
       uri = URI(url)
