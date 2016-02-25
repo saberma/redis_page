@@ -25,7 +25,8 @@ module ActionController
 
           after_filter({only: actions}.merge(options)) do |c|
             #path = request.path    # fixed: /products/ 地址带了/符号，缓存不生效
-            path = URI(request.original_url).path
+            #path = URI(request.original_url).path
+            path = request.path
             path = "#{path}-#{@cache_country}" if @cache_country
             c.cache_redis_page(response.body, path, options)
             c.record_cached_page
