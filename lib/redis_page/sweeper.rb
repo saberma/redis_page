@@ -1,4 +1,5 @@
 require 'redis_page/sweeper_worker'
+require 'sidekiq/api'
 
 module RedisPage
   module Sweeper
@@ -45,7 +46,13 @@ module RedisPage
 
       def fetch_infos(urls)
         urls.values.each do |info|
-          RedisPage::Sweeper.sweep info
+          RedisPage::Sweeper.sweep info unless exist_in_queue? info
+        end
+      end
+
+      def exist_in_queue?(info)
+        Sidekiq::Queue.new("redis_page").any? do |job|
+          job.klass == "RedisPage::SweeperWorker" and job.args[0] == info['url'] and job.args[1] == info['country']
         end
       end
     end
