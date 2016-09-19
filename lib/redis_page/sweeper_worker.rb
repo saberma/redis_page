@@ -5,7 +5,7 @@ module RedisPage
     include Sidekiq::Worker
 
     # 相同 url 和 country 的缓存清理请求，在2分钟内只能执行一次
-    sidekiq_options queue: :redis_page, retry: false, unique: :until_timeout, unique_expiration: 2 * 60
+    sidekiq_options retry: false, unique: :until_timeout, unique_expiration: 2 * 60
 
     def perform(url, country=nil)
       uri = URI(url)

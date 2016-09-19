@@ -28,6 +28,11 @@ module RedisPage
         fetch_infos(urls)
       end
 
+      # 通过覆写此方法, 达到可以指定redis_page queue的目的
+      def redis_page_queue_name
+        'redis_page'
+      end
+
       private
       def add_infos(urls, info)
         info = JSON.parse(info)
@@ -51,7 +56,7 @@ module RedisPage
       end
 
       def exist_in_queue?(info)
-        Sidekiq::Queue.new("redis_page").any? do |job|
+        Sidekiq::Queue.new(redis_page_queue_name).any? do |job|
           job.klass == "RedisPage::SweeperWorker" and job.args[0] == info['url'] and job.args[1] == info['country']
         end
       end
@@ -59,7 +64,8 @@ module RedisPage
 
     def self.sweep(info)
       Rails.logger.info "[page cache]add sweeper job: #{info['url']}-#{info['country']}"
-      SweeperWorker.perform_async(info['url'], info['country'])
+
+      Sidekiq::Client.push('queue' => redis_page_queue_name, 'class' => SweeperWorker, 'args' => [info['url'], info['country']])
     end
   end
 end
