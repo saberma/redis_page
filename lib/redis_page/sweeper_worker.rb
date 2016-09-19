@@ -3,7 +3,9 @@ require "sidekiq"
 module RedisPage
   class SweeperWorker
     include Sidekiq::Worker
-    sidekiq_options retry: false, unique: :until_and_while_executing
+
+    # 相同 url 和 country 的缓存清理请求，在2分钟内只能执行一次
+    sidekiq_options retry: false, unique: :until_timeout, unique_expiration: 2 * 60
 
     def perform(url, country=nil)
       uri = URI(url)
