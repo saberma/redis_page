@@ -50,15 +50,15 @@ module RedisPage
 
       def fetch_infos(urls)
         urls.values.each do |info|
-          RedisPage::Sweeper.sweep info
+          RedisPage::Sweeper.sweep(info, redis_page_queue_name)
         end
       end
     end
 
-    def self.sweep(info)
+    def self.sweep(info, queue)
       Rails.logger.info "[page cache]add sweeper job: #{info['url']}-#{info['country']}"
 
-      Sidekiq::Client.push('queue' => redis_page_queue_name, 'class' => SweeperWorker, 'args' => [info['url'], info['country']])
+      Sidekiq::Client.push('queue' => queue, 'class' => SweeperWorker, 'args' => [info['url'], info['country']])
     end
   end
 end
