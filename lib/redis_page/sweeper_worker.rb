@@ -1,4 +1,5 @@
 require "sidekiq"
+require 'sidekiq-unique-jobs'
 
 module RedisPage
   class SweeperWorker
