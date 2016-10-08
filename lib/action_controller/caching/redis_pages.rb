@@ -42,7 +42,9 @@ module ActionController
           text = "#{text} in #{namespace}"
         end
         Rails.logger.info text
-        RedisPage.cache_page_redis.setex(key, RedisPage.config.ttl || 604800, content)    # 1 周后失效
+        # RedisPage.cache_page_redis.setex(key, RedisPage.config.ttl || 604800, content)    # 1 周后失效
+        # 对于某个原本带有生存时间（TTL）的键来说， 当 SET 命令成功在这个键上执行时， 这个键原有的 TTL 将被清除。
+        RedisPage.cache_page_redis.set(key, content)    # 永不失效
       end
 
       def record_cached_page
