@@ -34,6 +34,7 @@ module ActionController
         end
       end
 
+      # TODO: 全球化部署时需要将一个页面写到多个redis上去，需要确保: 1. 写入速度快; 2. 确保写入成功;
       def cache_redis_page(content, path, options = {})
         key  = path
         text = "[page cache]caching: #{path}"
