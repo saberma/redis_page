@@ -22,14 +22,14 @@ module RedisPage
         id   = object.id
       end
       Rails.logger.info "[page cache]record: #{name}##{id}"
-      RedisPage.redis.sadd("i:#{name}:#{id}", { url: request.base_url + request.path, country: @cache_country }.to_json)
+      RedisPage.cache_relation_redis.sadd("i:#{name}:#{id}", { url: request.base_url + request.path, country: @cache_country }.to_json)
     end
 
     # 记录类相关的页面，方便实体创建时，刷新页面缓存
     def mark_cache_clazz(clazz)
       name = clazz.table_name
       Rails.logger.info "[page cache]class: #{name}"
-      RedisPage.redis.sadd("c:#{name}", { url: request.base_url + request.path, country: @cache_country }.to_json)
+      RedisPage.cache_relation_redis.sadd("c:#{name}", { url: request.base_url + request.path, country: @cache_country }.to_json)
     end
 
   end

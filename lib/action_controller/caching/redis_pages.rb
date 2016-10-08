@@ -12,7 +12,7 @@ module ActionController
       module ClassMethods
 
         def caches_redis_page(*actions)
-          return unless RedisPage.redis
+          return unless (RedisPage.cache_relation_redis && RedisPage.cache_page_redis)
           options = actions.extract_options!
 
           before_filter({only: actions}.merge(options)) do |c|
@@ -42,7 +42,7 @@ module ActionController
           text = "#{text} in #{namespace}"
         end
         Rails.logger.info text
-        RedisPage.redis.setex(key, RedisPage.config.ttl || 604800, content)    # 1 周后失效
+        RedisPage.cache_page_redis.setex(key, RedisPage.config.ttl || 604800, content)    # 1 周后失效
       end
 
       def record_cached_page
