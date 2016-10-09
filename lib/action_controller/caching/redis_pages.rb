@@ -1,4 +1,5 @@
 require 'active_support/core_ext/class/attribute_accessors'
+require 'active_support/gzip'
 require 'zlib'
 
 module ActionController
@@ -36,7 +37,14 @@ module ActionController
       end
 
       def compress_content(content)
-        RedisPage.compress_method == :deflate ? Zlib::Deflate.deflate(content) : content
+        case RedisPage.compress_method
+        when :deflate
+          Zlib::Deflate.deflate(content)
+        when :gzip
+          ActiveSupport::Gzip.compress(content)
+        else
+          content
+        end
       end
 
       # TODO: 全球化部署时需要将一个页面写到多个redis上去，需要确保: 1. 写入速度快; 2. 确保写入成功;
