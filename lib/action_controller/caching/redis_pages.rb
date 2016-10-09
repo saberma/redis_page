@@ -1,4 +1,5 @@
 require 'active_support/core_ext/class/attribute_accessors'
+require 'zlib'
 
 module ActionController
   module Caching
@@ -12,7 +13,7 @@ module ActionController
       module ClassMethods
 
         def caches_redis_page(*actions)
-          return unless RedisPage.redis
+          return unless (RedisPage.cache_relation_redis && RedisPage.cache_page_redis)
           options = actions.extract_options!
 
           before_filter({only: actions}.merge(options)) do |c|
@@ -28,12 +29,17 @@ module ActionController
             #path = URI(request.original_url).path
             path = request.path
             path = "#{path}-#{@cache_country}" if @cache_country
-            c.cache_redis_page(response.body, path, options)
+            c.cache_redis_page(compress_content(response.body), path, options)
             c.record_cached_page
           end
         end
       end
 
+      def compress_content(content)
+        RedisPage.compress_method == :deflate ? Zlib::Deflate.deflate(content) : content
+      end
+
+      # TODO: 全球化部署时需要将一个页面写到多个redis上去，需要确保: 1. 写入速度快; 2. 确保写入成功;
       def cache_redis_page(content, path, options = {})
         key  = path
         text = "[page cache]caching: #{path}"
@@ -42,7 +48,9 @@ module ActionController
           text = "#{text} in #{namespace}"
         end
         Rails.logger.info text
-        RedisPage.redis.setex(key, RedisPage.config.ttl || 604800, content)    # 1 周后失效
+        # RedisPage.cache_page_redis.setex(key, RedisPage.config.ttl || 604800, content)    # 1 周后失效
+        # 对于某个原本带有生存时间（TTL）的键来说， 当 SET 命令成功在这个键上执行时， 这个键原有的 TTL 将被清除。
+        RedisPage.cache_page_redis.set(key, content)    # 永不失效
       end
 
       def record_cached_page

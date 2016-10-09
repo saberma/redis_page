@@ -13,8 +13,8 @@ module RedisPage
         urls = {}
         key = "i:#{self.class.table_name}:#{self.id}"
         Rails.logger.info "[page cache]invalidate: #{key}"
-        RedisPage.redis.smembers(key).each do |info|
-          RedisPage.redis.srem(key, info)
+        RedisPage.cache_relation_redis.smembers(key).each do |info|
+          RedisPage.cache_relation_redis.srem(key, info)
           add_infos(urls, info)
         end
         add_clazz_infos(urls)
@@ -42,8 +42,8 @@ module RedisPage
       def add_clazz_infos(urls)
         key = "c:#{self.class.table_name}"
         Rails.logger.info "[page cache]invalidate: #{key}"
-        RedisPage.redis.smembers(key).each do |info|
-          RedisPage.redis.srem(key, info)
+        RedisPage.cache_relation_redis.smembers(key).each do |info|
+          RedisPage.cache_relation_redis.srem(key, info)
           add_infos(urls, info)
         end
       end
