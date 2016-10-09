@@ -1,4 +1,5 @@
 require 'active_support/core_ext/class/attribute_accessors'
+require 'zlib'
 
 module ActionController
   module Caching
@@ -28,10 +29,14 @@ module ActionController
             #path = URI(request.original_url).path
             path = request.path
             path = "#{path}-#{@cache_country}" if @cache_country
-            c.cache_redis_page(response.body, path, options)
+            c.cache_redis_page(compress_content(response.body), path, options)
             c.record_cached_page
           end
         end
+      end
+
+      def compress_content(content)
+        RedisPage.compress_method == :deflate ? Zlib::Deflate.deflate(content) : content
       end
 
       # TODO: 全球化部署时需要将一个页面写到多个redis上去，需要确保: 1. 写入速度快; 2. 确保写入成功;

@@ -4,6 +4,7 @@ module RedisPage
   class Config
     attr_accessor :sweeper, :redis, :ttl
     attr_accessor :cache_page_redis, :cache_relation_redis
+    attr_accessor :compress_method
   end
 
   def self.config
@@ -24,6 +25,11 @@ module RedisPage
 
   def self.cache_relation_redis
     config.cache_relation_redis || config.redis
+  end
+
+  # :deflate or nil
+  def self.compress_method
+    config.compress_method
   end
 
   def self.sweeper
