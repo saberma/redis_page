@@ -29,7 +29,7 @@ module RedisPage
 
   # :deflate or nil
   def self.compress_method
-    config.compress_method
+    [:deflate, :gzip].include?(config.compress_method) ? config.compress_method : nil
   end
 
   def self.sweeper
