@@ -44,18 +44,8 @@ module ActionController
         end
       end
 
-      # TODO: 全球化部署时需要将一个页面写到多个redis上去，需要确保: 1. 写入速度快; 2. 确保写入成功;
       def cache_redis_page(content, path, options = {})
-        key  = path
-        text = "[page cache]caching: #{path}"
-        if namespace = options[:namespace]
-          key  = "#{namespace}:#{key}"
-          text = "#{text} in #{namespace}"
-        end
-        Rails.logger.info text
-        # RedisPage.cache_page_redis.setex(key, RedisPage.config.ttl || 604800, content)    # 1 周后失效
-        # 对于某个原本带有生存时间（TTL）的键来说， 当 SET 命令成功在这个键上执行时， 这个键原有的 TTL 将被清除。
-        RedisPage.cache_page_redis.set(key, content)    # 永不失效
+        RedisPage.page_content_writter.write(content, path, options)
       end
 
       def record_cached_page
